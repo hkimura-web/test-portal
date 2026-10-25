@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>テスト・成績 総合ボード</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233f6c70'/%3E%3Crect x='15' y='10' width='28' height='38' rx='3' fill='white'/%3E%3Cpath d='M21 20h16M21 27h16M21 34h10' stroke='%233f6c70' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='44' cy='45' r='13' fill='%23e3b95f'/%3E%3Cpath d='M38 45l5 5 8-10' fill='none' stroke='%2337575c' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#f2f4f3;--sf:#fff;--ink:#27343b;--mu:#6a7880;--ln:#dde3e2;--ac:#3f6c70;--ac2:#e5eeee;--hd:#37575c;--bad:#a9564c;--bad2:#f6e9e7;--ok:#5a8870;--warn:#8f6f2c;--warn2:#f5eedd;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15191b;--sf:#1e2427;--ink:#e3e9ea;--mu:#93a1a6;--ln:#2e3a3e;--ac:#86b8bc;--ac2:#243538;--hd:#1f2e31;--bad:#d58a80;--bad2:#33201e;--ok:#82b49b;--warn:#cfae66;--warn2:#322b18;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15191b;--sf:#1e2427;--ink:#e3e9ea;--mu:#93a1a6;--ln:#2e3a3e;--ac:#86b8bc;--ac2:#243538;--hd:#1f2e31;--bad:#d58a80;--bad2:#33201e;--ok:#82b49b;--warn:#cfae66;--warn2:#322b18;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 "Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",Meiryo,sans-serif}
+.hd{background:var(--hd);color:#f1f5f5;padding:14px 16px}
+.hdi{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.ttl{font-size:19px;font-weight:700;letter-spacing:.02em}
+.hs{font-size:13px;opacity:.85;margin-top:2px}
+.sy{font-size:12px;padding:3px 12px;border-radius:12px;background:rgba(255,255,255,.14);white-space:nowrap}
+.sy.ok{background:rgba(160,210,180,.28)}.sy.err{background:rgba(220,140,130,.35)}
+.tabs{background:var(--bg);border-bottom:1px solid var(--ln);position:sticky;top:0;z-index:5}
+.tabi{max-width:900px;margin:0 auto;display:flex;gap:5px;overflow-x:auto;padding:9px 10px 0}
+.tb{flex:none;margin-bottom:-1px;background:var(--sf);border:1px solid var(--ln);border-bottom:0;border-radius:11px 11px 0 0;padding:8px 18px 9px;font-size:14.5px;color:var(--mu);white-space:nowrap;cursor:pointer}
+.tb:hover{color:var(--ac)}
+.tb.on{background:var(--ac);border-color:var(--ac);color:var(--sf);font-weight:700;padding-bottom:10px}
+main{max-width:900px;margin:0 auto;padding:18px 14px 70px}
+h2{font-size:15px;margin:0 0 8px;color:var(--ink)}.sec{margin-top:26px}.sec:first-child{margin-top:0}
+.sub{color:var(--mu);font-size:13px}
+button,select,input,textarea{font:inherit;color:var(--ink)}
+button{background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:5px 14px;cursor:pointer}
+button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+button.d{color:var(--bad)}
+.tb:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+input[type=text],input[type=date],input[type=password],input[type=search],select,textarea{background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:6px 10px;width:100%}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.k{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}
+.k b{display:block;font-size:26px;line-height:1.2;font-weight:500}.k span{font-size:12px;color:var(--mu)}
+.k.bad b{color:var(--bad)}.k.warn b{color:var(--warn)}
+.box{background:var(--sf);border:1px solid var(--ln);border-radius:12px;overflow:hidden}
+.row{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--ln)}
+.row:first-child{border-top:0}
+.row.done .tt{text-decoration:line-through;color:var(--mu)}
+.tt i{font-style:normal;font-size:12px;color:var(--ac);background:var(--ac2);border-radius:10px;padding:1px 9px;margin-left:8px}
+.due{font-size:13px;white-space:nowrap;color:var(--mu);text-align:right}
+.due.b{color:var(--bad)}.due.s{color:var(--warn)}
+.row a{font-size:13px;color:var(--ac)}
+.ph{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;border-top:1px solid var(--ln)}.ph:first-child{border-top:0}
+.bar{grid-column:1/3;height:6px;background:var(--bg);border-radius:3px;overflow:hidden}.bar div{height:100%;background:var(--ok)}
+.wk,.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wk{font-size:11px;color:var(--mu);text-align:center;margin-bottom:4px}
+.dc{min-height:48px;border-radius:8px;padding:3px 6px;font-size:11px;color:var(--mu);background:var(--bg);display:flex;flex-direction:column;justify-content:space-between}
+.dc.t{outline:2px solid var(--ac)}.dc.w{background:var(--ac2)}.dc .n{font-size:15px;color:var(--ac)}.dc.o .n{color:var(--bad)}.dc.we{opacity:.65}
+.er{display:grid;grid-template-columns:24px 1fr 140px 1fr;gap:8px;align-items:center;padding:8px 14px;border-top:1px solid var(--ln)}
+details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:4px 0}
+.pn{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:14px;display:grid;gap:10px}
+.pn label{display:grid;gap:3px;font-size:13px;color:var(--mu)}
+.empty{padding:22px;text-align:center;color:var(--mu)}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.lc{display:flex;justify-content:space-between;gap:8px;align-items:center;background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:9px 12px;color:var(--ink);text-decoration:none;font-size:14px}
+.lc:hover{background:var(--ac2);border-color:var(--ac)}.lc small{color:var(--mu);font-size:11px;white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.mv{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:6px 20px 16px;font-size:14.5px}.mv h3{font-size:14px;margin:18px 0 6px;color:var(--ac)}.mv li{margin:3px 0}
+.mv table{border-collapse:collapse;width:100%;font-size:13px;display:block;overflow-x:auto}.mv td{border:1px solid var(--ln);padding:5px 9px;vertical-align:top}
+.tr{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--ln)}.tr:first-child{border-top:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.le{display:grid;gap:8px;grid-template-columns:1fr 1fr auto;align-items:center;padding:8px 14px;border-top:1px solid var(--ln)}.le:first-child{border-top:0}
+.ge{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px}
+@media (max-width:600px){.le{grid-template-columns:1fr auto}.le input:nth-child(2){grid-column:1}.kpi{grid-template-columns:repeat(2,1fr)}.er{grid-template-columns:24px 1fr}.er input[type=date],.er input[type=text]{grid-column:1/3}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="hd"><div class="hdi"><div><div class="ttl">テスト・成績 総合ボード</div><div class="hs" id="h1"></div><div class="hs" id="h2"></div></div><div id="sync" class="sy"></div></div></div>
+<nav class="tabs"><div class="tabi" id="tabs"></div></nav>
+<main id="app"></main>
+<script>
+const K='seiseki_board_v1',GK='seiseki_gh_cfg_v1',PH=['試験準備','試験実施・採点','成績算出','報告・会議'];
+// [phase, title, anchor(E=試験開始 G=成績提出 M=成績会議), offset days, per subject]
+const TP=[
+[0,'試験範囲を確定・配付','E',-35,0],[0,'問題作成','E',-28,1],[0,'問題チェックシートを提出','E',-21,0],[0,'問題漢字を検索','E',-21,1],
+[0,'採点基準を作成','E',-14,1],[0,'印刷枚数を確認（在籍＋留学＋予備）','E',-12,0],[0,'問題冊子・解答用紙を印刷','E',-10,0],
+[0,'封筒・チェックリストを作成','E',-7,0],[0,'採点ナビ用の模範解答を作成','E',-7,1],[0,'採点ナビを設定','E',-5,0],
+[1,'欠席者の見込み点を入力','E',7,0],[1,'素点を入力','E',7,1],[1,'主体性評価・漢字テストを入力','E',9,1],
+[2,'観点別評価を算出','G',-7,1],[2,'評定を確認','G',-5,1],
+[3,'成績報告書を作成','G',-3,1],[3,'評定分布表を作成','G',-2,0],[3,'不振者報告書を作成','G',-2,0],[3,'教科連絡票を記入','G',-2,0],
+[3,'学年確認表を記入','G',-1,0],[3,'教科確認表をチェック','G',0,0],[3,'成績会議','M',0,0]];
+// ===== リンク集（GitHubで直接編集できます）[表示名, 種類, ID] 種類: d=ドキュメント s=スプレッドシート f=フォルダ p=PDF c=Classroom =====
+const U={d:'https://docs.google.com/document/d/',s:'https://docs.google.com/spreadsheets/d/',f:'https://drive.google.com/drive/folders/',p:'https://drive.google.com/file/d/',c:'https://classroom.google.com/c/'};
+const LK=[
+['試験準備',[['試験範囲 雛形','d','1epa8g8pGBuk5Xw2c2_qhuq7QAYU61KbgraJIHGv_yII'],['採点基準 雛形','d','1ipBNMkoyfSNgwxhOEbUlUB8Tn1tVEagly9ubqXvPe7U'],['定期試験アイデア','d','1s8PmiS953RozjuwxObwfmzovALkQUJxHt1U1sAaq7fU'],['テスト用AIプロンプト','d','1WnaKwGZBtXo6bmo58zCQCe4MSZpWb49b1PLKnDJBVGg'],['問題チェックシート(26)','s','1FpL11O-tpFm4BJv48DIvhMrtgP_yM0NiQQA-vPp_xuw'],['筒用帯','s','10GA4LsKV24pXvGuHVRkD0h8CUwArGb4QjXs2CndpvAg'],['授業担当・試験作成担当','s','1C2MnbY1IuVsUs0UraP2pBWgGZ6zqIyZVARXcOgU-dco'],['一太郎・冊子印刷','d','1pZAdn_31revpK-wURqisK9QNxebONDoNtxeKeFdBOyk'],['小冊子印刷','d','1sx3NwB4lyQnev2MBdjneXhiEnC2ONkxRANWw0j1Fbac'],['プリンター設定','d','1FeCyDVefHxUtL12UBlQgtFf-ODkJ-mneKZIJ7nGn-AY']]],
+['成績処理',[['観点別評価シート 国語科雛形 Ver.3.0','s','1Vqsu4GLTgCZCF9hKo2l5U-EbLCuFK2T1MOhpte0vKGs'],['観点別評価シート テンプレート Ver.2.0','s','1Q4zumQYFTh0CKQuL4IkWahC2zBxxsSBWAVnJxTS0smw'],['見込点計算式','s','1MlrOCKLMFqxtr7Q74AWJVumqAotRLnGMyNPS2p0UEL4'],['欠席者の評価方法','d','1cUCHiGsNVs5DD-TP2JMM98L97QeU22mvVcC1Udqpbsk'],['成績(評価)マニュアル','d','1hybFtfp7C29wzrZmNWZMEFnZvX-uDy-t7aEhMNYN_HQ'],['留学中生徒の成績','d','1vfJ0KUv0bhd3Ag0TmQIvfCVlpSYH2aoR7AcV28q_QYk'],['留学成績処理早見表(PDF)','p','1zjhc-9QIa5nqYFLE2qlRrSD7vpZZTZ5C'],['漢字テスト期末換算シート','s','1qsB1J2V9Zvgc7_tMqZ4R_WLRQeLCG7bJfc8lfF1scnc'],['欠課時数確認シート','s','1dPhobZLmWV0_evVV30YK2eyYXVfxq14mKbd4lmOu8Pc'],['BLEND校内マニュアル2025','d','1MhzAPXMuukTu3ltO16vHZ9TejlG1m204zel4gQArdKY'],['木村用BLENDマニュアル','d','1e0Y07nVdslBGbl9nIBt_CmCkTVHBJwRIUFdvo1hP_CQ'],['素点訂正申請書(26)','s','1sgZgok8OpaMCMFbm7VCDd6MoqlgVV9np-weQA6WPlus']]],
+['報告・会議',[['成績報告書 雛形(26)','s','1dTEImlb9YsBX1oVY3V9lu5yz70v9cY_Ivs11CZ6HL34'],['成績報告書 提出フォルダ','f','1YR3lYaTpl7WQpMOdq5-ONTtZ-4jts6Pd'],['評定分布表(26)','s','1zMV4eqjQ7zU2G5JOolmxTMy6QQneLS-P5Ui9w720an0'],['不振者報告書(26)','s','1MgW_yjd66dJeYXc4c_0oaLM1DHXNMjgj4y8Je53rAGQ'],['不振者報告書 提出フォルダ','f','1dbBZAZHo9lkDz_6hdm8YNC0pz_iVuE6z'],['教科連絡票(26)','s','1K6qJk6W6B7wmquKSZYqwUXWDj89tzd3srauO3D9LBmQ'],['学年確認表(26)','s','1wkFNZoHwZrblS6Lvo-RkBlHLGGsQ4U7Mu5186foqj7M'],['教科確認表(26)','s','1Df00Sm4NcJsbwJ72hdrCJUE_gF8wiuXBOTXNkgS289c'],['国語科 成績処理チェックシート(26)','s','1vcjUZ7QyH2KMLSspECgrLINTuOplnky0JUMrNgoYzdw'],['教務成績ClassRoom','c','MzQ0NzQ4OTgwNTIw']]],
+['フォルダ・ポータル',[['年度別データ','f','1z6hEQw6PX3q2Jy94Fa9QW4uZ2o_AEAyO'],['定期テスト','f','1ErUs03MCRzIoYyX2cnVdc0j5fakh9xNn'],['授業ポータル','s','1uKqD-0VL7xXR2JI4Uk1bBV0XBohe_OvavjYjck9mjQM'],['仕事(担任・ToDo・ICT)','d','1nVccjeWJfE_6hFBmR7AckM8g7J9XnLgum6ll4JMpZLY']]]];
+const DM=[{"id": "seiseki", "t": "成績算出の手順", "m": "# 成績(評価)算出スプレッドシートの使い方\n\n1. 「成績(評価)算出スプレッドシート」をコピー（「コメントをコピーする」に必ずチェック）\n2. 「基準一覧シート」で【観点比重】を入力\n3. 「【メモ】評価材料一覧シート」に「観点」と「課題名」を入力\n4. 「評価シート」に5桁番号・組・名前を入力\n5. 上部セルに「観点」を入力（右の「観点」をコピペ）\n6. 「課題名」を入力（例：1中間・1期末・2取組）\n7. 「MAX」に配点を入力するとABCの点数が自動表示（取組などはじめからABCのものはそのまま入力）\n8. 素点を入力。**欠席者は見込み点を算出**（《定期試験欠席者の評価方法》・◆見込点計算式）\n\n# 漢字小テスト\n\n- 平均点を算出して観点別評価シートの得点欄に入力→比重を調整してABC変換\n- 小テストを全て欠席した生徒は0点。公欠・出停・忌引は評価から除く\n- 欠席が非常に多い生徒は担当者で話し合って決定。留学生は空白（算出しない）\n\n# 提出物等\n\nA:5 B:3 C:1 D:0 で点数化→合計を算出→観点別評価シートに合計点とABC基準を入力"}, {"id": "kesseki", "t": "欠席・評価シート操作メモ", "m": "> 元資料で「いらなくなったデータ」とされていた部分です（国語科教科会 2023.7.4 ほか）。\n\n# 欠席の扱い\n\n- 後日試験（出停ではなく欠席）：**欠席は70%**（観点別ごと）。公欠・出停・忌引は100%\n- 定期試験欠席：公欠・出停・忌引→その試験をないものとして算出（分母から引く）／欠席→分母を減算せず0点\n- 単元テスト・小テスト欠席（後日試験なし）：未提出ならC判定\n- 例（2023年度2学期）：2学期から帰国した生徒が中間試験を公欠、後日受験も欠席、期末は受験 → 中間は期末の70%を見込み点として算出\n\n# 評価シート操作メモ（Ver5.0）\n\n- 観点別評価シートに「列」を追加・削除しない（5段階評価の関数に影響）\n- 該当箇所以外に「A」「B」「C」を入力しない（評価材料としてカウントされる）\n- 素点は学年全体のタブ（成績算出用の名簿と同じメンバー）を作ると貼り付けが1回で済む。留学生・退学者など未受験の生徒の得点欄は空欄（入れるとABC変換される）\n- 「❷素点素換」でABC変換の％を設定（基本はA=75%、C=34%）→「❸知識・技能」「❹思考・判断・表現」へ、主体的態度は「❺」へ貼り付け（学期ごとの欄に入力）\n- **「分母から減じる」**＝❸などのタブの「未評価資料数」に数値を入力すること（例：2学期に留学で試験の点がない→2）。帰国者は学期をまたいで積算（学年末は1学期からの積算値を入れる）\n- 転出・退学：「❻評定」の数値を消去し、一覧の人数も減らす\n- 評定平均がおかしい→入力タブのチェック入れ忘れを疑い、全タブのチェック欄を総点検"}, {"id": "ryugaku", "t": "留学中の成績", "m": "# 留学中生徒の成績算出方法\n\n- その学期にいない生徒の通知表は**とにかく空欄**。評定欄も空欄。評定平均の算出では留学中の生徒を除き、一覧の人数も減らす\n- **1年留学**：留学期間が長い方の学年を留学扱い。**注意➊** 1・3学期のみ（1学期間のみ）在籍していた生徒の成績は算出しない\n- **ターム留学**：留学期間以外の材料を積算して算出（例：2学期途中〜3学期の留学→1〜3学期の留学期間以外の材料を使い、分母から留学期間の材料を引く）。帰国直後の試験・課題などは差し引くなど配慮。学年末の成績は算出する。**注意➋** ターム留学中の学期は評定分布表から該当生徒を省く\n- **注意➌** 短期留学は、留学中の学期の通知表には何も入れない（空欄）。学年末の成績は算出する\n\n# 留学の型と学年成績（早見表PDFより）\n\n|長期A|8月出発・北米1年（8月中下旬〜6月下旬/7月上旬）|学年単位は包括認定／学年成績は2学期・3学期の積算|\n|長期B|1月出発・オセアニア1年（1月上中旬〜11月下旬/12月上旬）|学年成績は1学期・2学期・出発までの3学期の積算／学年単位は包括認定|\n|短期A|4月出発・オセアニア3か月（〜7月上中旬）|1学期の出発までと帰国後・2学期・3学期の積算|\n|短期B|8月出発・北米5か月（〜1月中下旬）|1学期・2学期出発まで・3学期帰国後の積算|\n|短期C-1|7月出発・2か月、1学期期末の未受験科目あり（7月上旬〜9月上旬）|1学期出発まで・2学期帰国後・3学期の積算。2学期中間は通常どおり成績に入れる|\n|短期C-2|7月出発・2か月、1学期期末は全科目受験（7月中下旬〜9月中下旬）|同上。2学期中間は成績に入れない|\n|短期D|1月出発・オセアニア3か月（1月上中旬〜4月上中旬）|1学期・2学期・3学期出発までの積算／1学期帰国後・2学期・3学期の積算（PDF記載の2パターン）|\n|短期E|上記以外|執行部・教務部・国際部で別途協議|\n\n> 留学中は出欠に「欠」を入力、短期は出発後・帰国前を「公欠」扱い。学期・試験ごとの入力表は原本PDF（リンク集「留学成績処理早見表」）で確認してください。"}, {"id": "kekka", "t": "欠課時数の確認", "m": "- 欠課時数超過が心配な生徒用に「欠課時数確認シート」と欠課時数早見表を使う（リンク集）\n- 欠課時数オーバーの科目は、全観点を「C」、評定を「1」としてZeusに入力。オーバーしていない科目は通常どおり評価（原級留置の条件と単位認定の条件は異なる）\n\n# 1. 科目全体（複数授業の合算）\n\n出欠管理→担当グループ／授業一覧から授業を選択→上部の「内訳」タブ→オレンジの「科目出欠合計」ボタン。遅刻・早退・遅早の3回で1欠席に換算されます。\n\n# 2. 成績抽出で出欠を取り出す\n\n成績管理→成績抽出→表示項目設定で授業情報の「授業出欠」を選択→出したいステータス（欠席・遅刻・早退など）にチェック。\n\n# 3. CSVで欠課時数を取り出す（Zeus取り込み用）\n\n担当グループ→科目→「内訳」タブ→日付範囲で学期を選択→CSVボタンでダウンロード→「欠席」セルを確認。出停・忌引は授業回数の分母から除外、**公欠は出席扱い**。\n\n# 4. 保護者の確認\n\n保護者ページ→出欠確認→「詳細」タブでHR・科目ごとの内訳が見られます（5月から翌日公開の設定）。"}];
+const TABS=[['home','ホーム'],['tasks','作業一覧'],['links','リンク集'],['man','マニュアル'],['set','設定']],KN={d:'ドキュメント',s:'シート',f:'フォルダ',p:'PDF',c:'Classroom',u:'Web'};
+const kind=u=>/\/document\//.test(u)?'d':/\/spreadsheets\//.test(u)?'s':/\/folders\//.test(u)?'f':/drive\.google\.com\/file/.test(u)?'p':/classroom\.google/.test(u)?'c':'u';
+const hrefOf=(k,i)=>/^https?:/.test(i)?i:U[k]+i+(k==='p'?'/view':'');
+const ens=s=>{if(!s.links)s.links=JSON.parse(JSON.stringify(LK));if(!s.man)s.man=JSON.parse(JSON.stringify(DM));return s};
+let S,TAB='home',OM='',LQ='',LE=false,ME=false,TF=null,SHA=null,timer=null,SY={st:'off',msg:''};
+const pad=n=>String(n).padStart(2,'0'),fmt=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const dt=s=>new Date(s+'T00:00:00'),add=(s,n)=>{const d=dt(s);d.setDate(d.getDate()+n);return fmt(d)};
+const today=fmt(new Date()),diff=s=>Math.round((dt(s)-dt(today))/864e5);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const md=s=>(+s.slice(5,7))+'/'+(+s.slice(8));
+const fmtJ=s=>{const d=dt(s);return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+'日月火水木金土'[d.getDay()]+'）'};
+let uid=Date.now();
+function gen(t,subs){const A={E:t.E,G:t.G,M:t.M},out=[];
+ TP.forEach(([p,title,a,o,ps])=>{const list=ps&&subs.length?subs:[''];
+  list.forEach(sub=>out.push({id:'t'+(uid++),term:t.id,ph:p,title,sub,due:add(A[a],o),done:false,url:''}))});return out}
+function seed(){// 日程は仮の値。設定タブで実際の日付に直してください
+ const t={id:'T1',name:'2026年度 2学期 期末',E:'2026-12-01',G:'2026-12-18',M:'2026-12-22',subs:['現代の国語','言語文化']};
+ return{terms:[t],cur:'T1',tasks:gen(t,t.subs),upd:0}}
+function load(){try{const s=JSON.parse(localStorage.getItem(K));if(s&&s.tasks)return ens(s)}catch(e){}return ens(seed())}
+function save(){S.upd=Date.now();try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}push()}
+const cur=()=>S.terms.find(t=>t.id===S.cur),mine=()=>S.tasks.filter(t=>t.term===S.cur);
+// ===== GitHub同期（トークンはこの端末のブラウザにだけ保存）=====
+const cfg=()=>{try{return JSON.parse(localStorage.getItem(GK))||{}}catch(e){return{}}};
+function guess(){const h=location.hostname,p=location.pathname.split('/')[1]||'';return h.endsWith('.github.io')?{owner:h.split('.')[0],repo:p&&!p.includes('.')?p:h}:{}}
+const ready=()=>{const c=cfg();return !!(c.token&&c.owner&&c.repo)};
+const gurl=c=>'https://api.github.com/repos/'+c.owner+'/'+c.repo+'/contents/'+(c.path||'data.json');
+const ghd=c=>({'Accept':'application/vnd.github+json','Authorization':'Bearer '+c.token,'Content-Type':'application/json'});
+const enc=s=>btoa(unescape(encodeURIComponent(s))),dec=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+function setSy(st,msg){SY={st,msg:msg||''};const e=document.getElementById('sync');if(!e)return;
+ e.className='sy '+st;e.textContent=st==='ok'?'同期済み':st==='off'?'未接続（この端末のみ保存）':msg}
+const em=m=>({401:'トークンが無効です',403:'トークンの権限を確認してください',404:'リポジトリ名かトークンの権限を確認してください',422:'保存できませんでした'})[m]||m;
+async function pubPull(){setSy('off');try{const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const rem=JSON.parse(await r.text());
+ if(rem&&rem.tasks&&(rem.upd||0)>(S.upd||0)){S=ens(rem);try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}render()}}catch(e){}}
+async function pull(){if(!ready())return pubPull();const c=cfg();setSy('busy','同期中…');
+ try{const r=await fetch(gurl(c)+(c.branch?'?ref='+encodeURIComponent(c.branch):''),{headers:ghd(c),cache:'no-store'});
+  if(r.status===404){SHA=null;return doPush(true)}
+  if(!r.ok)throw new Error(r.status);
+  const j=await r.json();SHA=j.sha;const rem=JSON.parse(dec(j.content));
+  if((rem.upd||0)>(S.upd||0)){S=ens(rem);try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}setSy('ok');render()}
+  else if((rem.upd||0)<(S.upd||0))return doPush(true);else setSy('ok')}
+ catch(e){setSy('err','同期エラー（'+em(e.message)+'）')}}
+function push(){if(!ready())return setSy('off');clearTimeout(timer);setSy('busy','保存中…');timer=setTimeout(()=>doPush(true),1200)}
+async function doPush(first){const c=cfg();
+ try{const body={message:'update '+new Date().toISOString(),content:enc(JSON.stringify(S))};if(SHA)body.sha=SHA;if(c.branch)body.branch=c.branch;
+  const r=await fetch(gurl(c),{method:'PUT',headers:ghd(c),body:JSON.stringify(body)});
+  if((r.status===409||r.status===422)&&first){const g=await fetch(gurl(c),{headers:ghd(c),cache:'no-store'});SHA=g.ok?(await g.json()).sha:null;return doPush(false)}
+  if(!r.ok)throw new Error(r.status);SHA=(await r.json()).content.sha;setSy('ok')}
+ catch(e){setSy('err','同期エラー（'+em(e.message)+'）')}}
+// ===== 表示 =====
+function dueLbl(t){if(t.done)return['完了',''];const d=diff(t.due);
+ if(d<0)return[md(t.due)+'・'+(-d)+'日超過','b'];if(d===0)return['今日','s'];if(d<=3)return[md(t.due)+'・あと'+d+'日','s'];return[md(t.due)+'・あと'+d+'日','']}
+function row(t){const[l,c]=dueLbl(t);
+ return`<div class="row ${t.done?'done':''}"><input type="checkbox" data-tg="${t.id}" ${t.done?'checked':''} aria-label="完了"><div class="tt">${esc(t.title)}${t.sub?`<i>${esc(t.sub)}</i>`:''}</div><span class="due ${c}">${l}</span>${t.url?`<a href="${esc(t.url)}" target="_blank" rel="noopener">開く</a>`:'<span></span>'}</div>`}
+const box=(a,e)=>`<div class="box">${a.length?a.map(row).join(''):`<div class="empty">${e}</div>`}</div>`;
+function drawHd(){const T=cur();document.getElementById('h1').textContent=(T?T.name:'学期が未設定です')+'　｜　'+fmtJ(today);
+ let n='';if(T){const o=mine().filter(t=>!t.done).sort((a,b)=>a.due<b.due?-1:1)[0];n=o?'次の締切：'+o.title+(o.sub?'（'+o.sub+'）':'')+'　'+dueLbl(o)[0]:'この学期の作業はすべて完了です'}
+ document.getElementById('h2').textContent=n}
+function render(){drawHd();setSy(SY.st,SY.msg);
+ document.getElementById('tabs').innerHTML=TABS.map(([k,n])=>`<button class="tb ${TAB===k?'on':''}" data-tab="${k}">${n}</button>`).join('');
+ document.getElementById('app').innerHTML=({home:vHome,tasks:vTasks,links:vLinks,man:vMan,set:vSet})[TAB]()}
+function vHome(){const T=cur();if(!T)return'<div class="empty">設定タブで学期を作ると、工程が自動で並びます。</div>';
+ const all=mine(),open=all.filter(t=>!t.done).sort((a,b)=>a.due<b.due?-1:1);
+ const over=open.filter(t=>diff(t.due)<0),w1=open.filter(t=>diff(t.due)>=0&&diff(t.due)<=7),m1=open.filter(t=>diff(t.due)>7&&diff(t.due)<=30);
+ const pct=all.length?Math.round(100*(all.length-open.length)/all.length):0;
+ const sel=S.terms.length>1?`<select id="ts" style="width:auto;margin-bottom:12px">${S.terms.map(t=>`<option value="${t.id}" ${t.id===S.cur?'selected':''}>${esc(t.name)}</option>`).join('')}</select>`:'';
+ const s0=add(today,-new Date().getDay());let cells='';
+ for(let i=0;i<35;i++){const d=add(s0,i),n=open.filter(t=>t.due===d).length,x=dt(d).getDay();
+  cells+=`<div class="dc ${d===today?'t':''} ${diff(d)>=0&&diff(d)<=7?'w':''} ${n&&diff(d)<0?'o':''} ${x%6===0?'we':''}"><span>${md(d)}</span><span class="n">${n||''}</span></div>`}
+ return sel+`<div class="kpi"><div class="k"><b>${pct}%</b><span>進捗（${all.length-open.length}/${all.length}件）</span></div><div class="k ${over.length?'bad':''}"><b>${over.length}</b><span>期限超過</span></div><div class="k ${w1.length?'warn':''}"><b>${w1.length}</b><span>7日以内</span></div><div class="k"><b>${m1.length}</b><span>8〜30日先</span></div></div>
+ <div class="sub" style="margin-top:8px">試験 ${md(T.E)}　成績提出 ${md(T.G)}　成績会議 ${md(T.M)}</div>
+ <section class="sec"><h2>いまやること（超過＋7日以内）</h2>${box(over.concat(w1),'直近の未完了はありません。')}</section>
+ <section class="sec"><h2>来月までの見通し（8〜30日先）</h2>${box(m1,'30日以内に控えているものはありません。')}</section>
+ <section class="sec"><h2>この5週間（未完了の件数）</h2><div class="box" style="padding:12px"><div class="wk">${'日月火水木金土'.split('').map(c=>`<span>${c}</span>`).join('')}</div><div class="cal">${cells}</div></div></section>
+ <section class="sec"><h2>工程ごとの進捗</h2><div class="box">${PH.map((n,i)=>{const a=all.filter(t=>t.ph===i),d=a.filter(t=>t.done).length,nx=a.filter(t=>!t.done).sort((x,y)=>x.due<y.due?-1:1)[0];
+  return`<div class="ph"><b>${n}</b><span class="sub">${d}/${a.length}${nx?'　次：'+esc(nx.title)+'（'+md(nx.due)+'）':'　完了'}</span><div class="bar"><div style="width:${a.length?100*d/a.length:0}%"></div></div></div>`}).join('')}</div></section>`}
+function vTasks(){if(!cur())return'<div class="empty">設定タブで学期を作ってください。</div>';const all=mine();
+ return`<div class="sub" style="margin-bottom:10px">期限の変更や、資料のURLの登録ができます（登録するとホームから「開く」で飛べます）。</div>`+PH.map((n,i)=>`<details ${i===0?'open':''}><summary>${n}</summary><div class="box">${all.filter(t=>t.ph===i).sort((a,b)=>a.due<b.due?-1:1).map(t=>`<div class="er"><input type="checkbox" data-tg="${t.id}" ${t.done?'checked':''} aria-label="完了"><span>${esc(t.title)}${t.sub?`<i style="font-style:normal;color:var(--ac);font-size:12px">　${esc(t.sub)}</i>`:''}</span><input type="date" value="${t.due}" data-dt="${t.id}"><input type="text" placeholder="資料・シートのURL" value="${esc(t.url)}" data-ul="${t.id}"></div>`).join('')}</div></details>`).join('')
+ +`<details><summary>作業を1件追加する</summary><div class="pn"><div class="g2"><label>作業名<input type="text" id="an"></label><label>期限<input type="date" id="ad" value="${today}"></label></div><label>工程<select id="ap">${PH.map((n,i)=>`<option value="${i}">${n}</option>`).join('')}</select></label><div><button class="p" data-a="badd">追加する</button></div></div></details>`}
+function linksHtml(){const q=LQ.trim().toLowerCase();
+ return S.links.map(([n,a],gi)=>{
+  if(LE)return`<section class="sec"><div class="ge"><input type="text" value="${esc(n)}" data-gn="${gi}" aria-label="グループ名"><button class="d" data-a="gdel" data-g="${gi}">グループを削除</button></div><div class="box">${a.map((x,ii)=>`<div class="le"><input type="text" value="${esc(x[0])}" data-lt="${gi}.${ii}" aria-label="表示名"><input type="text" value="${esc(hrefOf(x[1],x[2]))}" data-lu="${gi}.${ii}" aria-label="URL"><button class="d" data-a="ldel" data-g="${gi}" data-i="${ii}" aria-label="削除">✕</button></div>`).join('')||'<div class="empty">リンクがありません</div>'}</div></section>`;
+  const f=a.filter(x=>!q||x[0].toLowerCase().includes(q));
+  return f.length?`<section class="sec"><h2>${esc(n)}</h2><div class="lgrid">${f.map(x=>`<a class="lc" href="${esc(hrefOf(x[1],x[2]))}" target="_blank" rel="noopener"><span>${esc(x[0])}</span><small>${KN[x[1]]||'Web'}</small></a>`).join('')}</div></section>`:''}).join('')||'<div class="empty">該当するリンクがありません。</div>'}
+const vLinks=()=>`<div style="display:flex;gap:8px;margin-bottom:6px"><input type="search" id="lq" placeholder="リンクを検索（例：採点、報告書）" value="${esc(LQ)}"><button data-a="ledit" class="${LE?'p':''}" style="white-space:nowrap">${LE?'編集を終える':'編集'}</button></div><div id="ll">${linksHtml()}</div>`+(LE?`<section class="sec"><h2>リンクを追加</h2><div class="pn"><div class="g2"><label>表示名<input type="text" id="nt"></label><label>URL<input type="text" id="nu" placeholder="https://..."></label></div><div class="g2"><label>グループ<select id="ng">${S.links.map(([n],i)=>`<option value="${i}">${esc(n)}</option>`).join('')}<option value="new">＋新しいグループ</option></select></label><label>新しいグループ名（上で「新しいグループ」を選んだとき）<input type="text" id="nn"></label></div><div><button class="p" data-a="ladd">追加する</button></div></div></section>`:'');
+const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+function md2h(s){const L=s.split('\n');let o='',i=0;
+ while(i<L.length){const l=L[i];
+  if(/^#\s/.test(l)){o+='<h3>'+inl(l.slice(2))+'</h3>';i++}
+  else if(/^-\s/.test(l)){o+='<ul>';while(i<L.length&&/^-\s/.test(L[i]))o+='<li>'+inl(L[i++].slice(2))+'</li>';o+='</ul>'}
+  else if(/^\d+\.\s/.test(l)){o+='<ol>';while(i<L.length&&/^\d+\.\s/.test(L[i]))o+='<li>'+inl(L[i++].replace(/^\d+\.\s/,''))+'</li>';o+='</ol>'}
+  else if(/^\|/.test(l)){o+='<table>';while(i<L.length&&/^\|/.test(L[i]))o+='<tr>'+L[i++].replace(/^\||\|$/g,'').split('|').map(c=>'<td>'+inl(c.trim())+'</td>').join('')+'</tr>';o+='</table>'}
+  else if(/^>\s/.test(l)){o+='<p class="sub">'+inl(l.slice(2))+'</p>';i++}
+  else if(l.trim()===''){i++}
+  else{o+='<p>'+inl(l)+'</p>';i++}}
+ return o||'<p class="sub">（本文がありません）</p>'}
+function vMan(){const m=S.man.find(x=>x.id===OM)||S.man[0];if(m)OM=m.id;
+ const seg=`<div class="seg">${S.man.map(x=>`<button class="${OM===x.id?'p':''}" data-mn="${x.id}">${esc(x.t)}</button>`).join('')}<button data-a="mnew">＋追加</button></div>`;
+ if(!m)return seg+'<div class="empty">マニュアルがありません。「＋追加」で作れます。</div>';
+ if(ME)return seg+`<div class="pn"><label>タイトル<input type="text" id="mt" value="${esc(m.t)}"></label><label>本文<textarea id="mb" rows="16">${esc(m.m)}</textarea></label><details><summary>書き方</summary><div class="sub">行頭に「# 」で見出し、「- 」で箇条書き、「1. 」で番号つきの手順、「> 」で注釈。「|項目|内容|」で表。<br>文中は **太字** と [表示名](https://...) のリンクが使えます。空行で段落が分かれます。</div></details><div><button class="p" data-a="msave">保存</button> <button data-a="mcancel">やめる</button> <button class="d" data-a="mdel">このマニュアルを削除</button></div></div>`;
+ return seg+`<div class="mv">${md2h(m.m)}</div><div style="margin-top:10px"><button data-a="medit">このマニュアルを編集</button></div>`}
+function vSet(){const c=Object.assign({},guess(),cfg());
+ const tf=TF?(()=>{const e=TF==='edit',T=e?cur():{name:'',E:add(today,35),G:add(today,52),M:add(today,56),subs:['現代の国語','言語文化']};
+  return`<div class="pn" style="margin-top:12px"><b>${e?'学期の日程を変更':'新しい学期を作る'}</b><label>学期名<input type="text" id="fn" value="${esc(T.name)}" placeholder="例：2027年度 1学期 中間"></label><div class="g2"><label>試験の初日<input type="date" id="fe" value="${T.E}"></label><label>成績の提出期限<input type="date" id="fg" value="${T.G}"></label></div><div class="g2"><label>成績会議の日<input type="date" id="fm" value="${T.M}"></label><label>科目（読点区切り）<input type="text" id="fs" value="${esc(T.subs.join('、'))}" ${e?'disabled':''}></label></div><div class="sub">${e?'未完了の作業の期限を、新しい日程に合わせて引き直します。':'日程から逆算して、試験準備〜成績会議の作業が自動で並びます。'}</div><div><button class="p" data-a="tok">${e?'日程を反映':'作成する'}</button> <button data-a="tcancel">やめる</button></div></div>`})():'';
+ return`<section class="sec"><h2>学期</h2><div class="box">${S.terms.map(t=>`<div class="tr"><span><b>${esc(t.name)}</b>${t.id===S.cur?' <span class="sub">（表示中）</span>':''}<br><span class="sub">試験 ${md(t.E)}／成績提出 ${md(t.G)}／成績会議 ${md(t.M)}</span></span><span><button data-a="tsel" data-id="${t.id}">表示</button> <button data-a="tedit" data-id="${t.id}">日程変更</button> <button class="d" data-a="tdel" data-id="${t.id}">削除</button></span></div>`).join('')||'<div class="empty">学期がありません。</div>'}</div><div style="margin-top:10px"><button class="p" data-a="tnew">＋新しい学期</button></div>${tf}</section>
+ <section class="sec"><h2>GitHubで同期（どのPCからでも同じデータを使う）</h2><div class="pn"><div class="g2"><label>ユーザー名<input type="text" id="go" value="${esc(c.owner||'')}"></label><label>リポジトリ名<input type="text" id="gr" value="${esc(c.repo||'')}"></label></div><label>アクセストークン<input type="password" id="gt" autocomplete="off" placeholder="${c.token?'保存済み（変更するときだけ入力）':'github_pat_...'}"></label><div class="g2"><label>データファイル名<input type="text" id="gp" value="${esc(c.path||'data.json')}"></label><label>ブランチ（空欄＝既定）<input type="text" id="gb" value="${esc(c.branch||'')}"></label></div><div><button class="p" data-a="ghsave">保存して同期</button> <button data-a="ghsync">今すぐ同期</button> <button data-a="ghoff">接続を解除</button></div>
+ <details><summary>トークンの作り方</summary><ol class="sub"><li>GitHubで Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</li><li>Repository access は「Only select repositories」でこのリポジトリだけを選ぶ</li><li>Permissions の Contents を「Read and write」にする</li><li>表示されたトークンを上の欄に貼り、「保存して同期」</li></ol></details>
+ <div class="sub">トークンはこの端末のブラウザにだけ保存され、ページには書き込まれません。新しいPCでは、このページを開いて一度だけ入力してください。公開リポジトリのため、data.json は誰でも読めます。生徒名などの個人情報は入力しないでください。</div></div></section>
+ <section class="sec"><h2>バックアップ</h2><div class="pn"><textarea id="bk" rows="3" placeholder="データの全文を表示／貼り付けて復元"></textarea><div><button data-a="bshow">データを表示</button> <button data-a="brest">貼り付けた内容で復元</button></div></div></section>`}
+// ===== 操作 =====
+const $=id=>document.getElementById(id),V=id=>$(id).value;
+function tab(k){TAB=k;LE=false;ME=false;try{history.replaceState(null,'','#'+k)}catch(e){}render();window.scrollTo(0,0)}
+function act(a,el){
+ if(a==='ledit'){LE=!LE;return render()}
+ if(a==='ldel'){S.links[+el.dataset.g][1].splice(+el.dataset.i,1);save();return render()}
+ if(a==='gdel'){if(!confirm('このグループとリンクをすべて削除します。よろしいですか？'))return;S.links.splice(+el.dataset.g,1);save();return render()}
+ if(a==='ladd'){const n=V('nt').trim(),u=V('nu').trim();if(!n||!/^https?:/.test(u))return alert('表示名と、https:// で始まるURLを入力してください。');
+  let g=V('ng');if(g==='new'){const gn=V('nn').trim();if(!gn)return alert('新しいグループ名を入力してください。');S.links.push([gn,[]]);g=S.links.length-1}
+  S.links[+g][1].push([n,kind(u),u]);save();return render()}
+ if(a==='mnew'){const id='m'+(uid++);S.man.push({id,t:'新しいマニュアル',m:''});OM=id;ME=true;save();return render()}
+ if(a==='medit'){ME=true;return render()}if(a==='mcancel'){ME=false;return render()}
+ if(a==='msave'){const m=S.man.find(x=>x.id===OM);m.t=V('mt').trim()||'無題';m.m=V('mb');ME=false;save();return render()}
+ if(a==='mdel'){if(!confirm('このマニュアルを削除します。よろしいですか？'))return;S.man=S.man.filter(x=>x.id!==OM);OM='';ME=false;save();return render()}
+ if(a==='badd'){const n=V('an').trim();if(!n||!V('ad'))return;S.tasks.push({id:'t'+(uid++),term:S.cur,ph:+V('ap'),title:n,sub:'',due:V('ad'),done:false,url:''});save();return render()}
+ if(a==='tnew'){TF='new';return render()}if(a==='tcancel'){TF=null;return render()}
+ if(a==='tsel'){S.cur=el.dataset.id;save();return render()}
+ if(a==='tedit'){S.cur=el.dataset.id;TF='edit';return render()}
+ if(a==='tdel'){if(!confirm('この学期と作業をすべて削除します。よろしいですか？'))return;const id=el.dataset.id;S.tasks=S.tasks.filter(t=>t.term!==id);S.terms=S.terms.filter(t=>t.id!==id);if(S.cur===id)S.cur=S.terms[0]?S.terms[0].id:null;save();return render()}
+ if(a==='tok'){if(!V('fn').trim()||!V('fe')||!V('fg')||!V('fm'))return;const subs=V('fs').split(/[、,，]/).map(s=>s.trim()).filter(Boolean);
+  if(TF==='edit'){const t=cur();Object.assign(t,{name:V('fn').trim(),E:V('fe'),G:V('fg'),M:V('fm')});const fr=gen(t,t.subs);
+   S.tasks.filter(x=>x.term===t.id&&!x.done).forEach(x=>{const f=fr.find(y=>y.ph===x.ph&&y.title===x.title&&y.sub===x.sub);if(f)x.due=f.due})}
+  else{const t={id:'T'+(uid++),name:V('fn').trim(),E:V('fe'),G:V('fg'),M:V('fm'),subs};S.terms.push(t);S.cur=t.id;S.tasks=S.tasks.concat(gen(t,subs))}
+  TF=null;save();return render()}
+ if(a==='ghsave'){const o=cfg();const c={owner:V('go').trim(),repo:V('gr').trim(),token:V('gt').trim()||o.token||'',path:V('gp').trim()||'data.json',branch:V('gb').trim()};
+  try{localStorage.setItem(GK,JSON.stringify(c))}catch(e){}SHA=null;return pull()}
+ if(a==='ghsync')return pull();
+ if(a==='ghoff'){try{localStorage.removeItem(GK)}catch(e){}SHA=null;setSy('off');return render()}
+ if(a==='bshow'){$('bk').value=JSON.stringify(S);$('bk').select()}
+ if(a==='brest'){try{const s=JSON.parse(V('bk'));if(s&&s.tasks&&s.terms){S=ens(s);save();render()}}catch(e){$('bk').value='読み込めませんでした。バックアップの全文を貼り付けてください。'}}}
+const app=$('app');
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t)return tab(t.dataset.tab);
+ const m=e.target.closest('[data-mn]');if(m){OM=m.dataset.mn;ME=false;return render()}
+ const a=e.target.closest('[data-a]');if(a)act(a.dataset.a,a)});
+document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
+ if(t.id==='ts'){S.cur=t.value;save();return render()}
+ if(d.gn!==undefined){S.links[+d.gn][0]=t.value;return save()}
+ if(d.lt){const[g,i]=d.lt.split('.');S.links[+g][1][+i][0]=t.value;return save()}
+ if(d.lu){const[g,i]=d.lu.split('.'),u=t.value.trim(),x=S.links[+g][1][+i];x[2]=u;x[1]=kind(u);return save()}
+ if(d.tg){S.tasks.find(x=>x.id===d.tg).done=t.checked;save();render()}
+ else if(d.dt&&t.value){S.tasks.find(x=>x.id===d.dt).due=t.value;save();render()}
+ else if(d.ul){S.tasks.find(x=>x.id===d.ul).url=t.value.trim();save();render()}});
+document.addEventListener('input',e=>{if(e.target.id==='lq'){LQ=e.target.value;$('ll').innerHTML=linksHtml()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+S=load();const h0=(location.hash||'').slice(1);if(TABS.some(t=>t[0]===h0))TAB=h0;
+render();pull();
+</script>
+</body>
+</html>
